@@ -1,0 +1,26 @@
+{
+  "name": "htmlgame-vue",
+  "version": "1.0.0",
+  "description": "Vue.js implementation of a HTML quiz game",
+  "main": "index.html",
+  "dependencies": {
+    "vue": "^2.5"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wortwart/htmlgame-vue.git"
+  },
+  "keywords": [
+    "Vue.js",
+    "game"
+  ],
+  "author": "Herbert Braun, c't Magazin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wortwart/htmlgame-vue/issues"
+  },
+  "homepage": "https://github.com/wortwart/htmlgame-vue#readme"
+}

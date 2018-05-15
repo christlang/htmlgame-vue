@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="de">
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="author" content="Herbert Braun"/>
+		<title>HTML-Spiel</title>
+		<link rel="stylesheet" href="css/htmlgame.css"/>
+	</head>
+	<body>
+		<h1>HTML-Spiel</h1>
+
+		<main>
+			<div class="flex">
+				<button v-if="timerState==='over'" @click.prevent="restart">Neu starten</button>
+				<button v-else @click.prevent="pause" :disabled="pauseDisabled">{{pauseText}}</button>
+				<button @click.prevent="gameOver" :disabled="giveupDisabled">Aufgeben</button>
+			</div>
+
+			<div class="flex">
+				<div id="counter">{{done}} von {{todo}}</div>
+				<input type="text" autofocus v-model:value="inputValue" :disabled="inputDisabled" @input="handleInput">
+				<div id="timer" :class="timerState">{{minutes}}:{{seconds}}</div>
+			</div>
+
+			<div class="output green" v-if="els.length">
+				HTML5-Elemente: <span v-for="item in els">{{item}}</span>
+			</div>
+			<div class="output blue" v-if="experimental.length">
+				Experimentell: <span v-for="item in experimental">{{item}}</span>
+			</div>
+			<div class="output red" v-if="deprecated.length">
+				Veraltet: <span v-for="item in deprecated">{{item}}</span>
+			</div>
+
+			<div v-if="timerState === 'over'">
+				<p><strong>{{els.length}} reguläre HTML5-Elemente, {{experimental.length}} experimentelle und {{deprecated.length}} veraltete Elemente in {{timeToPlay - time}} Sekunden</strong></p>
+				<h3>Ergebnis: {{score}} Punkte</h3>
+				<ul v-if="results.length">
+					<li v-for="result in results">
+						<b>{{result.name}}:</b> {{result.found.length}} von {{result.total}}. Gefunden:
+						<ul v-if="result.found.length" class="elementlist found">
+							<li v-for="element in result.found">
+								<code :title="element.role">{{element.name}}</code>
+							</li>
+						</ul>
+						<span v-else>Leider keine!</span>
+						Es fehlen:
+						<ul v-if="result.missing.length" class="elementlist missing">
+							<li v-for="element in result.missing">
+								<code :title="element.role">{{element.name}}</code>
+							</li>
+						</ul>
+						<span v-else>Keine &ndash; toll!</span>
+					</li>
+				</ul>
+			</div>
+		</main>
+
+		<script type="text/javascript" src="node_modules/vue/dist/vue.js"></script>
+		<!--<script type="text/javascript" src="node_modules/vue/dist/vue.min.js"></script>-->
+		<script type="text/javascript" src="js/gamedata.js"></script>
+		<script type="text/javascript" src="js/htmlgame.js"></script>
+
+		<footer>
+			<p>Dieses Spiel ist ein Demo-Projekt für die Programmierung mit <a href="https://vuejs.org/">Vue.js</a>; es wird ausführlich erklärt in einem Tutorial in <a href="http://www.heise.de/ct/">c't</a> Ausgabe 12/18. Das gleiche Projekt wurde bereits mit React umgesetzt (<a href="https://woerter.de/projects/htmlgame/">Demo</a>, <a href="https://github.com/wortwart/htmlgame/">Code</a>), um die beiden Bibliotheken vergleichen zu können. Die Vue.js-Version hat allerdings einige zusätzliche Features.</p>
+
+			<p>Datengrundlage ist die W3C-Empfehlung <a href="https://www.w3.org/TR/2017/REC-html51-20171003/">HTML 5.1-2</a> (Oktober 2017); als experimentell hinzugefügt wurden die in <a href="https://html.spec.whatwg.org/multipage/">WHATWG HTML</a> (Stand: Mai 2018) zusätzlich verzeichneten Elemente.</p>
+
+			<p><a href="/">Woerter.de</a> &middot; <a href="/projects/">Andere Projekte</a> &middot; &copy; Herbert Braun 2018</p>
+		</footer>
+
+	</body>
+</html>
