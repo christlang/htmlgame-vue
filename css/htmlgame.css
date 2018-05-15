@@ -8,6 +8,10 @@ body {
   margin: 0 auto;
 }
 
+main {
+  display: none;
+}
+
 .flex {
   display: flex;
   justify-content: space-between;

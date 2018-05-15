@@ -1,15 +1,22 @@
 'use strict'
 Vue.config.devtools = true
 
-/*
-Vue.component('input-field', {
-	props: ['inputVal', 'inputDisabled'],
-	template: '<input type="text" :value="inputVal" v-if:disabled="inputDisabled" autofocus>'
+Vue.component('found-elements', {
+	props: ['color', 'list'],
+	template: `<div class="output" :class="color">
+		<slot></slot>: <span v-for="item in list">{{item}}</span>
+	</div>`
 })
-*/
 
 const game = new Vue({
 	el: 'main',
+	created: function() {
+		this.time = this.timeToPlay
+	},
+	mounted: function() {
+		this.$el.style.display = 'block'
+	},
+
 	data: {
 		timeToPlay: 360,
 		//get timeToPlay() {return 360},
@@ -22,9 +29,24 @@ const game = new Vue({
 		experimental: [],
 		results: []
 	},
-	created: function() {
-		this.time = this.timeToPlay
+
+	components: {
+		'test-element': {
+			props: ['list', 'color'],
+			template: `<div class="output" :class="color">
+				<slot></slot>: <span v-for="item in list">{{item}}</span>
+			</div>`
+		},
+		'report-list': {
+			props: ['list', 'type'],
+			template: `<ul class="elementlist" :class="type">
+				<li v-for="element in list">
+					<code :title="element.role">{{element.name}}</code>
+				</li>
+			</ul>`
+		}
 	},
+
 	computed: {
 		giveupDisabled: function() {
 			return this.timerState !== 'on'

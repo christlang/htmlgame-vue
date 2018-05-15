@@ -9,6 +9,8 @@
 	<body>
 		<h1>HTML-Spiel</h1>
 
+		<noscript>This HTML game requires JavaScript.</noscript>
+
 		<main>
 			<div class="flex">
 				<button v-if="timerState==='over'" @click.prevent="restart">Neu starten</button>
@@ -22,34 +24,21 @@
 				<div id="timer" :class="timerState">{{minutes}}:{{seconds}}</div>
 			</div>
 
-			<div class="output green" v-if="els.length">
-				HTML5-Elemente: <span v-for="item in els">{{item}}</span>
-			</div>
-			<div class="output blue" v-if="experimental.length">
-				Experimentell: <span v-for="item in experimental">{{item}}</span>
-			</div>
-			<div class="output red" v-if="deprecated.length">
-				Veraltet: <span v-for="item in deprecated">{{item}}</span>
-			</div>
+			<found-elements v-if="els.length" :list="els" color="green">HTML5-Elemente</found-elements>
+			<found-elements v-if="experimental.length" :list="experimental" color="blue">Experimentell</found-elements>
+			<found-elements v-if="deprecated.length" :list="deprecated" color="red">Veraltet</found-elements>
 
 			<div v-if="timerState === 'over'">
 				<p><strong>{{els.length}} reguläre HTML5-Elemente, {{experimental.length}} experimentelle und {{deprecated.length}} veraltete Elemente in {{timeToPlay - time}} Sekunden</strong></p>
 				<h3>Ergebnis: {{score}} Punkte</h3>
 				<ul v-if="results.length">
 					<li v-for="result in results">
-						<b>{{result.name}}:</b> {{result.found.length}} von {{result.total}}. Gefunden:
-						<ul v-if="result.found.length" class="elementlist found">
-							<li v-for="element in result.found">
-								<code :title="element.role">{{element.name}}</code>
-							</li>
-						</ul>
+						<b>{{result.name}}:</b> {{result.found.length}} von {{result.total}}.
+						Gefunden:
+						<report-list v-if="result.found.length" :list="result.found" type="found"></report-list>
 						<span v-else>Leider keine!</span>
 						Es fehlen:
-						<ul v-if="result.missing.length" class="elementlist missing">
-							<li v-for="element in result.missing">
-								<code :title="element.role">{{element.name}}</code>
-							</li>
-						</ul>
+						<report-list v-if="result.missing.length" :list="result.missing" type="missing"></report-list>
 						<span v-else>Keine &ndash; toll!</span>
 					</li>
 				</ul>
