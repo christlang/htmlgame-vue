@@ -68,13 +68,13 @@ const gamedata = [
 			{name: 'time', role: 'date and/or time'},
 			{name: 'code', role: 'code fragment'},
 			{name: 'var', role: 'variable or placeholder text'},
-			{name: 'samp', role: '(sample) output'},
+			{name: 'samp', role: 'sample output'},
 			{name: 'kbd', role: 'user input'},
 			{name: 'sub', role: 'subscript'},
 			{name: 'sup', role: 'superscript'},
-			{name: 'i', role: 'offset text conventionally styled in italic'},
-			{name: 'b', role: 'offset text conventionally styled in bold'},
-			{name: 'u', role: 'offset text conventionally styled with an underline'},
+			{name: 'i', role: 'offset text styled in italic'},
+			{name: 'b', role: 'offset text styled in bold'},
+			{name: 'u', role: 'offset text styled with an underline'},
 			{name: 'mark', role: 'marked (highlighted) text'},
 			{name: 'ruby', role: 'ruby annotation'},
 			{name: 'rb', role: 'ruby base text. Not in WHATWG HTML'},
@@ -172,48 +172,47 @@ const gamedata = [
 		name: 'Veraltet',
 		value: 'malus',
 		elements: [
-			{name: 'applet', role: 'use embed or object instead'},
-			{name: 'acronym', role: 'use abbr instead'},
-			{name: 'bgsound', role: 'use audio instead'},
-			{name: 'dir', role: 'use ul instead'},
-			{name: 'frame', role: 'use iframe and CSS or server-side includes'},
-			{name: 'frameset', role: 'use iframe and CSS or server-side includes'},
-			{name: 'noframes', role: 'use iframe and CSS or server-side includes'},
-			{name: 'isindex', role: 'use an explicit form and text field combination instead'},
-			{name: 'listing', role: 'use pre and code instead'},
-			{name: 'nextid', role: 'use GUIDs instead'},
-			{name: 'noembed', role: 'use object instead of embed when fallback is necessary'},
-			{name: 'plaintext', role: 'use the "text/plain" MIME type instead'},
-			{name: 'strike', role: 'use del if the element is marking an edit, otherwise use s'},
-			{name: 'xmp', role: 'use pre and code instead'},
-			{name: 'basefont', role: 'use appropriate elements or CSS instead'},
+			{name: 'acronym', role: 'use abbr'},
+			{name: 'applet', role: 'use embed or object'},
+			{name: 'basefont', role: 'use CSS'},
+			{name: 'bgsound', role: 'use audio'},
 			{name: 'big', role: 'use h1, strong or mark'},
-			{name: 'blink', role: 'use appropriate elements or CSS instead'},
-			{name: 'center', role: 'use appropriate elements or CSS instead'},
-			{name: 'font', role: 'use appropriate elements or CSS instead'},
-			{name: 'marquee', role: 'use appropriate elements or CSS instead'},
-			{name: 'multicol', role: 'use appropriate elements or CSS instead'},
-			{name: 'nobr', role: 'use appropriate elements or CSS instead'},
-			{name: 'spacer', role: 'use appropriate elements or CSS instead'},
-			{name: 'tt', role: 'use kbd, var, code or samp element'}
+			{name: 'blink', role: 'use CSS'},
+			{name: 'center', role: 'use CSS'},
+			{name: 'command', role: 'use button or link'},
+			{name: 'content', role: 'use slot'},
+			{name: 'dir', role: 'use ul'},
+			{name: 'element', role: 'use JavaScript instead to create custom elements'},
+			{name: 'font', role: 'use CSS'},
+			{name: 'frame', role: 'use iframe or server-side includes'},
+			{name: 'frameset', role: 'use iframe or server-side includes'},
+			{name: 'image', role: 'use img'},
+			{name: 'isindex', role: 'use an explicit form and text field combination'},
+			{name: 'listing', role: 'use pre and code'},
+			{name: 'marquee', role: 'use CSS'},
+			{name: 'multicol', role: 'use CSS'},
+			{name: 'nextid', role: 'use GUIDs'},
+			{name: 'nobr', role: 'use CSS'},
+			{name: 'noembed', role: 'use object instead of embed when fallback is necessary'},
+			{name: 'noframes', role: 'use iframe or server-side includes'},
+			{name: 'plaintext', role: 'use the "text/plain" MIME type'},
+			{name: 'shadow', role: 'use Web Component API'},
+			{name: 'spacer', role: 'use CSS'},
+			{name: 'strike', role: 'use del if the element is marking an edit, otherwise use s'},
+			{name: 'tt', role: 'use kbd, var, code or samp'},
+			{name: 'xmp', role: 'use pre and code'}
 		]
 	}
 ]
 
-const els = {},
-	experimental = {},
-	deprecated = {}
-
-for (let i = 0; i < gamedata.length; i++) {
-	if (gamedata[i].value === 'bonus')
-		gamedata[i].elements.map(el => {
-			experimental[el.name] = true
-		})
-	else if (gamedata[i].value === 'malus')
-		gamedata[i].elements.map(el => {
-			deprecated[el.name] = true
-		})
-	else gamedata[i].elements.map(el => {
-		els[el.name] = true
-	})
-}
+const els = {}
+const groups = ['html5', 'experimental', 'deprecated']
+groups.forEach(group => els[group] = new Set())
+gamedata.forEach(group => {
+	if (group.value === 'bonus')
+		group.elements.map(el => els.experimental.add(el.name))
+	else if (group.value === 'malus')
+		group.elements.map(el => els.deprecated.add(el.name))
+	else
+		group.elements.map(el => els.html5.add(el.name))
+})

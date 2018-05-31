@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="de">
+	<head>
+		<meta charset="utf-8">
+		<meta name="author" content="Herbert Braun">
+		<title>HTML-Spiel</title>
+		<link rel="stylesheet" href="../htmlgame.css">
+	</head>
+	<body>
+		<h1>HTML-Spiel</h1>
+
+		<noscript>This HTML game requires JavaScript.</noscript>
+
+		<main>
+			<div class="flex">
+				<button v-if="state === 'over'" @click.prevent="restart">Neu starten</button>
+				<button v-else @click.prevent="pause" :disabled="pauseDisabled">{{state === 'paused'? 'Fortsetzen' : 'Pause'}}</button>
+				<button @click.prevent="state = 'over'" :disabled="state !== 'on'">Aufgeben</button>
+			</div>
+
+			<div class="flex">
+				<div id="counter">{{done}} von {{todo}}</div>
+				<input type="text" autofocus v-model:value="inputValue" :disabled="inputDisabled" @input="handleInput">
+				<div id="timer" :class="state">{{minutes}}:{{seconds}}</div>
+			</div>
+
+			<found-elements v-if="html5.length" :list="html5" color="green">HTML5-Elemente</found-elements>
+			<found-elements v-if="experimental.length" :list="experimental" color="blue">Experimentell</found-elements>
+			<found-elements v-if="deprecated.length" :list="deprecated" color="red">Veraltet</found-elements>
+
+			<div v-if="state === 'over'">
+				<p><strong>{{html5.length}} reguläre HTML5-Elemente, {{experimental.length}} experimentelle und {{deprecated.length}} veraltete Elemente in {{timeToPlay - time}} Sekunden</strong></p>
+				<h3>Ergebnis: {{score}} Punkte</h3>
+				<ul v-if="results.length">
+					<li v-for="result in results">
+						<b>{{result.name}}:</b> {{result.found.length}} von {{result.total}}.
+						Gefunden:
+						<report-list v-if="result.found.length" :list="result.found" type="found"></report-list>
+						<span v-else>Leider keine!</span>
+						Es fehlen:
+						<report-list v-if="result.missing.length" :list="result.missing" type="missing"></report-list>
+						<span v-else>Keine &ndash; toll!</span>
+					</li>
+				</ul>
+			</div>
+
+		</main>
+
+		<script src="../node_modules/vue/dist/vue.js"></script>
+		<script src="../gamedata.js"></script>
+		<script src="htmlgame.js"></script>
+
+	</body>
+</html>
