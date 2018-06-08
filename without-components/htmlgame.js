@@ -66,6 +66,8 @@ const game = new Vue({
 					return true
 				}
 			})
+			if (this.done === this.todo)
+				this.state = 'over'
 		},
 
 		timer: function() {
@@ -80,10 +82,8 @@ const game = new Vue({
 				let diff = Date.now() - start - expected
 				let passedSeconds = Math.round(expected / 1000)
 				this.time = Math.max(0, startTime - passedSeconds)
-				if (this.time === 0) {
-					this.state = 'over'
-					return
-				}
+				if (this.time === 0)
+					return this.state = 'over'
 				setTimeout(step, Math.max(0, interval - diff))
 			}
 			setTimeout(step, interval)
